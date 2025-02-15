@@ -1,0 +1,5 @@
+# Ignore artifacts:
+!.storybook
+build
+coverage
+.next
