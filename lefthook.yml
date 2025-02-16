@@ -1,3 +1,11 @@
+# build commit message
+prepare-commit-msg:
+  commands:
+    commitzen:
+      interactive: true
+      run: npx cz --hook
+      env:
+        LEFTHOOK: 0
 # EXAMPLE USAGE:
 #
 #   Refer for explanation to following link:
