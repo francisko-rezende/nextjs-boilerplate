@@ -1,19 +1,46 @@
 import { FlatCompat } from '@eslint/eslintrc';
+import pluginJs from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
+// import jsxA11y from 'eslint-plugin-jsx-a11y';
+import pluginReact from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
+  // import.meta.dirname is available after Node.js v20.11.0
+  baseDirectory: import.meta.dirname,
 });
 
-const eslintConfig = [
+/** @type {import('eslint').Linter.Config[]} */
+const config = [
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
+  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
-  eslintConfigPrettier,
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
+  pluginReact.configs.flat.recommended,
+  {
+    plugins: {
+      react: pluginReact,
+    },
+    rules: {
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
+    },
+  },
+  {
+    plugins: {
+      'react-hooks': reactHooks,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
+  },
+  // jsxA11y.flatConfigs.recommended,
   {
     plugins: {
       'simple-import-sort': simpleImportSort,
@@ -23,6 +50,7 @@ const eslintConfig = [
       'simple-import-sort/exports': 'error',
     },
   },
+  eslintConfigPrettier,
 ];
 
-export default eslintConfig;
+export default config;
