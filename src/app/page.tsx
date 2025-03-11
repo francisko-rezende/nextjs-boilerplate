@@ -5,7 +5,7 @@ export default function Page() {
     <div>
       <h1>Home</h1>
       <Link href="/about">About</Link>
-      <button>I am a button</button>
+      {/* <button>I am a button</button> */}
     </div>
   );
 }
